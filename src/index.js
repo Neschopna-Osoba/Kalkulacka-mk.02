@@ -1,84 +1,17 @@
-const calculator = {
-  displayValue: "0",
-  firstOperand: null,
-  waitingForSecondOperand: false,
-  operator: null
-};
+function solveExpression() {
+  var vyraz = document.getElementById("vyraz").value;
 
-function updateDisplay() {
-  const display = document.querySelector(".calculator-screen");
-  display.value = calculator.displayValue;
+  document.getElementById("vysledek").innerHTML = "Výsledek je: " + vyraz;
 }
 
-updateDisplay();
+var input = document.getElementById("vyraz");
 
-function inputDigit(digit) {
-  if (calculator.waitingForSecondOperand === true) {
-    calculator.displayValue = digit;
-    calculator.waitingForSecondOperand = false;
-  } else {
-    if (calculator.displayValue === "0") {
-      calculator.displayValue = digit;
-    } else {
-      calculator.displayValue = calculator.displayValue + digit;
-    }
+// Spustí funkci, když uživatel zmáčkne Enter
+input.addEventListener("keyup", function(event) {
+  // Zruší výchozí funkci klávesy, pokud nějaká existuje
+  event.preventDefault();
+  // 13 je hodnota klávesy Enter
+  if (event.keyCode === 13) {
+    solveExpression();
   }
-}
-
-function handleOperator(nextOperator) {
-  if (calculator.firstOperand === null) {
-    calculator.firstOperand = parseFloat(calculator.displayValue);
-  } else if (calculator.operator) {
-    const result = performCalculation[calculator.operator](
-      calculator.firstOperand,
-      parseFloat(calculator.displayValue)
-    );
-
-    calculator.displayValue = String(result);
-    calculator.firstOperand = result;
-  }
-
-  calculator.waitingForSecondOperand = true;
-  calculator.operator = nextOperator;
-}
-
-const performCalculation = {
-  "/": (firstOperand, secondOperand) => firstOperand / secondOperand,
-
-  "*": (firstOperand, secondOperand) => firstOperand * secondOperand,
-
-  "+": (firstOperand, secondOperand) => firstOperand + secondOperand,
-
-  "-": (firstOperand, secondOperand) => firstOperand - secondOperand,
-
-  "=": (firstOperand, secondOperand) => secondOperand
-};
-
-const keys = document.querySelector(".calculator-keys");
-keys.addEventListener("click", event => {
-  const { target } = event;
-  if (!target.matches("button")) {
-    //Stisknuto něco jiného než tlačítko => skončit
-    return;
-  }
-  if (target.classList.contains("operator")) {
-    handleOperator(target.value);
-    updateDisplay();
-    return;
-  }
-  if (target.classList.contains("all-clear")) {
-    reserCalculator();
-    updateDisplay();
-    return;
-  }
-
-  inputDigit(target.value);
-  updateDisplay();
 });
-
-function reserCalculator() {
-  calculator.displayValue = "0";
-  calculator.firstOperand = null;
-  calculator.waitingForSecondOperand = false;
-  calculator.operator = null;
-}
