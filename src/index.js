@@ -1,27 +1,50 @@
 function solveExpression() {
   var vyraz = document.getElementById("vyraz").value;
-  let leva = 0;
-  let prava = 0;
-  var zmena = true;
-  for (let i = 0; i < vyraz.length; i++) {
-    if (vyraz.charAt(i) == "+") {
-      zmena = false;
-    } else if (vyraz.charAt(i) == "-") {
-      zmena = false;
-    } else if (vyraz.charAt(i) == "*") {
-      zmena = false;
-    } else if (vyraz.charAt(i) == "/") {
-      zmena = false;
-    } else {
-      if (zmena) {
-        leva = leva + parseInt(vyraz.charAt(i));
-      } else {
-        prava = prava + parseInt(vyraz.charAt(i));
-      }
+  var cislo = 0;
+  var arr = new Array();
+
+  for (var i = 0; i < vyraz.length; i++) {
+    //cislo
+    if ("1234567890".includes(vyraz[i].charAt(0))) {
+      cislo *= 10;
+      cislo += parseInt(vyraz[i], 10);
+    }
+    //operator
+    else if ("+-*/".includes(vyraz[i].charAt(0))) {
+      arr.push(cislo);
+      cislo = 0;
+      arr.push(vyraz[i]);
     }
   }
-  document.getElementById("vysledek").innerHTML =
-    "Výsledek je: " + leva + " " + prava;
+  arr.push(cislo);
+
+  // nasobeni, deleni maji prednost
+  for (i = 0; i < arr.length; i++) {
+    if ("*".includes(arr[i])) {
+      arr[i - 1] = arr[i - 1] * arr[i + 1];
+      arr.splice(i, 2);
+      i--;
+    } else if ("/".includes(arr[i])) {
+      arr[i - 1] = arr[i - 1] / arr[i + 1];
+      arr.splice(i, 2);
+      i--;
+    }
+  }
+
+  //scitani, odcitani
+  for (i = 0; i < arr.length; i++) {
+    if ("+".includes(arr[i])) {
+      arr[i - 1] = arr[i - 1] + arr[i + 1];
+      arr.splice(i, 2);
+      i--;
+    } else if ("-".includes(arr[i])) {
+      arr[i - 1] = arr[i - 1] - arr[i + 1];
+      arr.splice(i, 2);
+      i--;
+    }
+  }
+
+  document.getElementById("vysledek").innerHTML = "Výsledek je: " + arr[0];
 }
 
 var input = document.getElementById("vyraz");
