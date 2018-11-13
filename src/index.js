@@ -5,12 +5,12 @@ function solveExpression() {
 
   for (var i = 0; i < vyraz.length; i++) {
     //cislo
-    if ("1234567890".includes(vyraz[i].charAt(0))) {
+    if ("1234567890".includes(vyraz[i])) {
       cislo *= 10;
       cislo += parseInt(vyraz[i], 10);
     }
     //operator
-    else if ("+-*/".includes(vyraz[i].charAt(0))) {
+    else if ("+-*/".includes(vyraz[i])) {
       arr.push(cislo);
       cislo = 0;
       arr.push(vyraz[i]);
